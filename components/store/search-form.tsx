@@ -8,17 +8,14 @@ import { Button, Input } from '@/components/ui'
 interface SearchFormProps {
   initialArea?: string
   initialCategory?: string
-  initialSearch?: string
 }
 
 export function SearchForm({ 
   initialArea = '', 
-  initialCategory = '', 
-  initialSearch = '' 
+  initialCategory = '' 
 }: SearchFormProps) {
   const [area, setArea] = useState(initialArea)
   const [category, setCategory] = useState(initialCategory)
-  const [search, setSearch] = useState(initialSearch)
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,14 +24,13 @@ export function SearchForm({
     
     if (area) params.set('area', area)
     if (category) params.set('category', category)
-    if (search) params.set('search', search)
     
     router.push(`/stores?${params.toString()}`)
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">
             エリア
@@ -74,19 +70,6 @@ export function SearchForm({
             <option value="general">一般書店</option>
             <option value="specialty">専門書店</option>
           </select>
-        </div>
-
-        <div>
-          <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-            書店名で検索
-          </label>
-          <Input
-            id="search"
-            type="text"
-            placeholder="書店名を入力"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
         </div>
       </div>
 
