@@ -27,12 +27,12 @@ export function StoreCard({ store }: StoreCardProps) {
                 title="Google Mapで開く"
               >
                 <MapPin className="w-4 h-4 mr-1" />
-                {store.area}
+                エリアID: {store.area_id}
               </a>
             ) : (
               <>
                 <MapPin className="w-4 h-4 mr-1" />
-                {store.area}
+                エリアID: {store.area_id}
               </>
             )}
           </div>
