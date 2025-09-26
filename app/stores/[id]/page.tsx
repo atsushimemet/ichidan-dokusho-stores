@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { MapPin, ExternalLink, Twitter, Instagram, Globe, Map } from 'lucide-react'
+import { MapPin, ExternalLink, Twitter, Instagram, Globe } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui'
 import { Store } from '@/lib/types'
 
@@ -75,8 +75,23 @@ export default function StoreDetailPage() {
               </h1>
               
               <div className="flex items-center text-lg text-gray-600 mb-4">
-                <MapPin className="w-5 h-5 mr-2" />
-                {store.area}
+                {store.google_map_link ? (
+                  <a
+                    href={store.google_map_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center hover:text-red-600 transition-colors"
+                    title="Google Mapで開く"
+                  >
+                    <MapPin className="w-5 h-5 mr-2" />
+                    {store.area}
+                  </a>
+                ) : (
+                  <>
+                    <MapPin className="w-5 h-5 mr-2" />
+                    {store.area}
+                  </>
+                )}
               </div>
               
               <div className="flex flex-wrap gap-2 mb-6">
@@ -102,19 +117,6 @@ export default function StoreDetailPage() {
                 リンク
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {store.google_map_link && (
-                  <a
-                    href={store.google_map_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <Map className="w-5 h-5 text-red-500 mr-3" />
-                    <span className="font-medium">Google Map</span>
-                    <ExternalLink className="w-4 h-4 ml-auto text-gray-400" />
-                  </a>
-                )}
-
                 {store.x_link && (
                   <a
                     href={store.x_link}

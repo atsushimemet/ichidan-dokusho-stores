@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, ExternalLink, Map } from 'lucide-react'
+import { MapPin, ExternalLink } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui'
 import { Store } from '@/lib/types'
 
@@ -17,8 +17,24 @@ export function StoreCard({ store }: StoreCardProps) {
           </h3>
           
           <div className="flex items-center text-sm text-gray-600 mb-3">
-            <MapPin className="w-4 h-4 mr-1" />
-            {store.area}
+            {store.google_map_link ? (
+              <a
+                href={store.google_map_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center hover:text-red-600 transition-colors"
+                title="Google Mapで開く"
+              >
+                <MapPin className="w-4 h-4 mr-1" />
+                {store.area}
+              </a>
+            ) : (
+              <>
+                <MapPin className="w-4 h-4 mr-1" />
+                {store.area}
+              </>
+            )}
           </div>
           
           <div className="flex flex-wrap gap-2 mb-4">
@@ -34,19 +50,6 @@ export function StoreCard({ store }: StoreCardProps) {
           )}
           
           <div className="flex space-x-3">
-            {store.google_map_link && (
-              <a
-                href={store.google_map_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center text-sm text-gray-600 hover:text-red-600 transition-colors"
-                title="Google Mapで開く"
-              >
-                <Map className="w-4 h-4 mr-1" />
-                地図
-              </a>
-            )}
             {store.x_link && (
               <a
                 href={store.x_link}
