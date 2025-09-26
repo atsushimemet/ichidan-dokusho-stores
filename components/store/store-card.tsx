@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, ExternalLink } from 'lucide-react'
+import { MapPin, ExternalLink, Map } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui'
 import { Store } from '@/lib/types'
 
@@ -34,6 +34,19 @@ export function StoreCard({ store }: StoreCardProps) {
           )}
           
           <div className="flex space-x-3">
+            {store.google_map_link && (
+              <a
+                href={store.google_map_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center text-sm text-gray-600 hover:text-red-600 transition-colors"
+                title="Google Mapで開く"
+              >
+                <Map className="w-4 h-4 mr-1" />
+                地図
+              </a>
+            )}
             {store.x_link && (
               <a
                 href={store.x_link}
