@@ -4,27 +4,22 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
 import { Button } from '@/components/ui'
-import { Category, Area } from '@/lib/types'
+import { Area } from '@/lib/types'
 
 interface SearchFormProps {
-  initialArea?: string
-  initialCategory?: string
+  initialPrefecture?: string
 }
 
 export function SearchForm({ 
-  initialArea = '', 
-  initialCategory = '' 
+  initialPrefecture = '' 
 }: SearchFormProps) {
-  const [area, setArea] = useState(initialArea)
-  const [category, setCategory] = useState(initialCategory)
+  const [prefecture, setPrefecture] = useState(initialPrefecture)
   const [areas, setAreas] = useState<Area[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
     fetchAreas()
-    fetchCategories()
   }, [])
 
   const fetchAreas = async () => {
@@ -36,18 +31,6 @@ export function SearchForm({
       }
     } catch (error) {
       console.error('Error fetching areas:', error)
-    }
-  }
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/categories')
-      if (response.ok) {
-        const data = await response.json()
-        setCategories(data.data.categories || [])
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error)
     } finally {
       setLoading(false)
     }
@@ -57,8 +40,14 @@ export function SearchForm({
     e.preventDefault()
     const params = new URLSearchParams()
     
-    if (area) params.set('area', area)
-    if (category) params.set('category', category)
+    if (prefecture) {
+      // 都道府県が選択された場合、その都道府県のエリアIDを取得して検索
+      const prefectureAreas = areas.filter(area => area.prefecture === prefecture)
+      if (prefectureAreas.length > 0) {
+        const areaIds = prefectureAreas.map(area => area.id).join(',')
+        params.set('area_ids', areaIds)
+      }
+    }
     
     router.push(`/stores?${params.toString()}`)
   }
@@ -71,42 +60,26 @@ export function SearchForm({
     )
   }
 
+  // 都道府県の一覧を取得（重複を除去）
+  const prefectures = Array.from(new Set(areas.map(area => area.prefecture))).sort()
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">
-            エリア
+      <div className="flex justify-center">
+        <div className="w-full max-w-md">
+          <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700 mb-1">
+            都道府県
           </label>
           <select
-            id="area"
-            value={area}
-            onChange={(e) => setArea(e.target.value)}
+            id="prefecture"
+            value={prefecture}
+            onChange={(e) => setPrefecture(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">すべてのエリア</option>
-            {areas.map(areaItem => (
-              <option key={areaItem.id} value={areaItem.name}>
-                {areaItem.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-            カテゴリ
-          </label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">すべてのカテゴリ</option>
-            {categories.map(categoryItem => (
-              <option key={categoryItem.id} value={categoryItem.name}>
-                {categoryItem.display_name}
+            <option value="">都道府県を選択</option>
+            {prefectures.map(pref => (
+              <option key={pref} value={pref}>
+                {pref}
               </option>
             ))}
           </select>

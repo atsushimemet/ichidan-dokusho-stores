@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const area_id = searchParams.get('area_id')
+    const area_ids = searchParams.get('area_ids')
     const category_id = searchParams.get('category_id')
     const search = searchParams.get('search')
     const page = parseInt(searchParams.get('page') || '1')
@@ -21,6 +22,11 @@ export async function GET(request: NextRequest) {
     // フィルター適用
     if (area_id) {
       query = query.eq('area_id', parseInt(area_id, 10))
+    }
+    if (area_ids) {
+      // 複数のエリアIDで検索（都道府県検索用）
+      const areaIdArray = area_ids.split(',').map(id => parseInt(id.trim(), 10))
+      query = query.in('area_id', areaIdArray)
     }
     if (category_id) {
       query = query.eq('category_id', parseInt(category_id, 10))
