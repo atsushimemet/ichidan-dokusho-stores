@@ -55,6 +55,12 @@
    * SNSリンク（Instagram）
    * HPリンク
    * 紐づくXポスト埋め込み（書店の紹介）
+ 
+* 技術スタック：
+   * Next.js
+   * Tailwind CSS v3
+   * Vercel
+   * Supabase
 
 ---
 
