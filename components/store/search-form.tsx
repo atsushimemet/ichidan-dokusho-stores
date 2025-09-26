@@ -8,10 +8,16 @@ import { Area } from '@/lib/types'
 
 interface SearchFormProps {
   initialPrefecture?: string
+  initialArea?: string
+  initialCategory?: string
+  initialSearch?: string
 }
 
 export function SearchForm({ 
-  initialPrefecture = '' 
+  initialPrefecture = '',
+  initialArea = '',
+  initialCategory = '',
+  initialSearch = ''
 }: SearchFormProps) {
   const [prefecture, setPrefecture] = useState(initialPrefecture)
   const [areas, setAreas] = useState<Area[]>([])
