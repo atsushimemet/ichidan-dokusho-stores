@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
-import { Button, Input } from '@/components/ui'
+import { Button } from '@/components/ui'
+import { Category, Area } from '@/lib/types'
 
 interface SearchFormProps {
   initialArea?: string
@@ -16,7 +17,41 @@ export function SearchForm({
 }: SearchFormProps) {
   const [area, setArea] = useState(initialArea)
   const [category, setCategory] = useState(initialCategory)
+  const [areas, setAreas] = useState<Area[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
+
+  useEffect(() => {
+    fetchAreas()
+    fetchCategories()
+  }, [])
+
+  const fetchAreas = async () => {
+    try {
+      const response = await fetch('/api/areas')
+      if (response.ok) {
+        const data = await response.json()
+        setAreas(data.data.areas || [])
+      }
+    } catch (error) {
+      console.error('Error fetching areas:', error)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories')
+      if (response.ok) {
+        const data = await response.json()
+        setCategories(data.data.categories || [])
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,6 +61,14 @@ export function SearchForm({
     if (category) params.set('category', category)
     
     router.push(`/stores?${params.toString()}`)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    )
   }
 
   return (
@@ -42,14 +85,11 @@ export function SearchForm({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">すべてのエリア</option>
-            <option value="東京">東京</option>
-            <option value="大阪">大阪</option>
-            <option value="京都">京都</option>
-            <option value="横浜">横浜</option>
-            <option value="名古屋">名古屋</option>
-            <option value="福岡">福岡</option>
-            <option value="札幌">札幌</option>
-            <option value="仙台">仙台</option>
+            {areas.map(areaItem => (
+              <option key={areaItem.id} value={areaItem.name}>
+                {areaItem.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -64,11 +104,11 @@ export function SearchForm({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">すべてのカテゴリ</option>
-            <option value="book_cafe">ブックカフェ</option>
-            <option value="used_book">古書</option>
-            <option value="children_book">児童書</option>
-            <option value="general">一般書店</option>
-            <option value="specialty">専門書店</option>
+            {categories.map(categoryItem => (
+              <option key={categoryItem.id} value={categoryItem.name}>
+                {categoryItem.display_name}
+              </option>
+            ))}
           </select>
         </div>
       </div>
