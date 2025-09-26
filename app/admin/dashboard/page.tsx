@@ -41,20 +41,20 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const [storesRes, categoriesRes, areasRes] = await Promise.all([
+      const [storesRes, categoryTagsRes, areasRes] = await Promise.all([
         fetch('/api/stores?limit=1'),
-        fetch('/api/categories'),
+        fetch('/api/category-tags'),
         fetch('/api/areas')
       ])
 
       const storesData = await storesRes.json()
-      const categoriesData = await categoriesRes.json()
+      const categoryTagsData = await categoryTagsRes.json()
       const areasData = await areasRes.json()
 
       setStats({
         totalStores: storesData.data?.pagination?.total || 0,
         activeStores: storesData.data?.stores?.filter((s: Store) => s.is_active).length || 0,
-        totalCategories: categoriesData.data?.categories?.length || 0,
+        totalCategories: categoryTagsData.data?.category_tags?.length || 0,
         totalAreas: areasData.data?.areas?.length || 0
       })
     } catch (error) {
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
             <div className="flex items-center">
               <Users className="h-8 w-8 text-purple-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">カテゴリ数</p>
+                <p className="text-sm font-medium text-gray-600">カテゴリタグ数</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalCategories}</p>
               </div>
             </div>

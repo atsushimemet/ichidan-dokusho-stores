@@ -245,37 +245,6 @@ export default function AdminSettingsPage() {
               )}
             </div>
 
-            {/* 統計情報 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
-                      <span className="text-green-600 font-semibold">総</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">総カテゴリタグ数</p>
-                    <p className="text-2xl font-semibold text-gray-900">{categoryTags.length}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
-                      <span className="text-blue-600 font-semibold">活</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">アクティブ</p>
-                    <p className="text-2xl font-semibold text-gray-900">
-                      {categoryTags.filter(tag => tag.is_active).length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
@@ -383,37 +352,6 @@ export default function AdminSettingsPage() {
               )}
             </div>
 
-            {/* 統計情報 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
-                      <span className="text-green-600 font-semibold">総</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">総エリア数</p>
-                    <p className="text-2xl font-semibold text-gray-900">{areas.length}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
-                      <span className="text-blue-600 font-semibold">活</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">アクティブ</p>
-                    <p className="text-2xl font-semibold text-gray-900">
-                      {areas.filter(area => area.is_active).length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>
