@@ -1,4 +1,4 @@
-# ichidan-dokusho-stores システム設計書
+# 一段読書-stores システム設計書
 
 ## 1. システム概要
 

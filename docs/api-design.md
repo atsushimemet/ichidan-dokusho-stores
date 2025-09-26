@@ -2,7 +2,7 @@
 
 ## 1. 概要
 
-ichidan-dokusho-storesのAPI設計書。Next.js API Routesを使用し、RESTful APIを提供する。
+一段読書-storesのAPI設計書。Next.js API Routesを使用し、RESTful APIを提供する。
 
 ## 2. API仕様
 

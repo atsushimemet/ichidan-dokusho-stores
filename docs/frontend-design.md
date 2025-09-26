@@ -2,7 +2,7 @@
 
 ## 1. 概要
 
-ichidan-dokusho-storesのフロントエンド設計書。Next.js 14 (App Router)とTailwind CSSを使用し、レスポンシブでアクセシブルなWebアプリケーションを構築する。
+一段読書-storesのフロントエンド設計書。Next.js 14 (App Router)とTailwind CSSを使用し、レスポンシブでアクセシブルなWebアプリケーションを構築する。
 
 ## 2. 技術スタック
 

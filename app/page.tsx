@@ -1,6 +1,6 @@
 import { SearchForm } from '@/components/store/search-form'
 import { Card, CardContent } from '@/components/ui'
-import { BookOpen, MapPin, Heart } from 'lucide-react'
+import { BookOpen, Heart, MapPin } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -43,7 +43,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              一冊読書の特徴
+              一段読書の特徴
             </h2>
             <p className="text-lg text-gray-600">
               独立系書店の魅力を最大限に引き出します

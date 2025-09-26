@@ -8,7 +8,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-gray-900">
-              一冊読書
+              一段読書
             </Link>
           </div>
           

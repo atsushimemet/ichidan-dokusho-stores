@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '一冊読書 - 独立系書店を発見',
+  title: '一段読書 - 独立系書店を発見',
   description: '独立系書店の情報を提供するWebアプリケーション。あなたの次に行く本屋を探しませんか？',
 }
 

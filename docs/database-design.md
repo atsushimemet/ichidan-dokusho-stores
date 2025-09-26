@@ -2,7 +2,7 @@
 
 ## 1. 概要
 
-ichidan-dokusho-storesのデータベース設計書。Supabase（PostgreSQL）を使用し、独立系書店の情報管理を行う。
+一段読書-storesのデータベース設計書。Supabase（PostgreSQL）を使用し、独立系書店の情報管理を行う。
 
 ## 2. データベース構成
 

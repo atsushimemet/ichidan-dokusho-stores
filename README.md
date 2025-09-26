@@ -1,4 +1,4 @@
-# ichidan-dokusho-stores MVP要件
+# 一段読書-stores MVP要件
 
 ## 1. 対象範囲
 * 独立系書店のみ
