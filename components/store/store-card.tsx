@@ -41,6 +41,18 @@ export function StoreCard({ store }: StoreCardProps) {
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
               {getCategoryDisplayName(store.category)}
             </span>
+            {store.category_tags && store.category_tags.length > 0 && (
+              <>
+                {store.category_tags.map((tag) => (
+                  <span
+                    key={tag.id}
+                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                  >
+                    {tag.display_name}
+                  </span>
+                ))}
+              </>
+            )}
           </div>
           
           {store.description && (

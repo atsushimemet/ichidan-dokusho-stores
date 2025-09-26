@@ -13,6 +13,7 @@ export interface Store {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  category_tags?: CategoryTag[]; // カテゴリタグを追加
 }
 
 // カテゴリ情報の型定義
@@ -32,6 +33,15 @@ export interface Area {
   name: string;
   prefecture: string;
   sort_order: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+// カテゴリタグ情報の型定義
+export interface CategoryTag {
+  id: number;
+  name: string;
+  display_name: string;
   is_active: boolean;
   created_at: string;
 }

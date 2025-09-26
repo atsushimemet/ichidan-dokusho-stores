@@ -12,7 +12,12 @@ export async function GET(
 
     const { data: store, error } = await supabase
       .from('stores')
-      .select('*')
+      .select(`
+        *,
+        category_tags:store_category_tags(
+          category_tag:category_tags(*)
+        )
+      `)
       .eq('id', id)
       .eq('is_active', true)
       .single()

@@ -16,7 +16,12 @@ export async function GET(request: NextRequest) {
     // クエリ構築
     let query = supabase
       .from('stores')
-      .select('*', { count: 'exact' })
+      .select(`
+        *,
+        category_tags:store_category_tags(
+          category_tag:category_tags(*)
+        )
+      `, { count: 'exact' })
       .eq('is_active', true)
 
     // フィルター適用
