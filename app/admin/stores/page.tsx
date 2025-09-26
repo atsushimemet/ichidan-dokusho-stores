@@ -134,19 +134,19 @@ export default function AdminStoresPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push('/admin/dashboard')}
-                className="mr-4"
+                className="mr-4 px-3"
+                title="戻る"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                戻る
+                <ArrowLeft className="h-4 w-4" />
               </Button>
               <h1 className="text-3xl font-bold text-gray-900">書店管理</h1>
             </div>
             <Button
               onClick={() => router.push('/admin/stores/new')}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-blue-600 hover:bg-blue-700 px-3"
+              title="新規登録"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              新規登録
+              <Plus className="h-4 w-4" />
             </Button>
           </div>
         </div>
