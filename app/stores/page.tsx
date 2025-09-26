@@ -20,25 +20,29 @@ function StoresPageContent() {
 
   const searchParams = useSearchParams()
   const area = searchParams.get('area') || ''
+  const area_ids = searchParams.get('area_ids') || ''
   const category = searchParams.get('category') || ''
   const search = searchParams.get('search') || ''
 
   useEffect(() => {
     fetchStores()
-  }, [area, category, search])
+  }, [area, area_ids, category, search])
 
   const fetchStores = async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams()
       if (area) params.set('area', area)
+      if (area_ids) params.set('area_ids', area_ids)
       if (category) params.set('category', category)
       if (search) params.set('search', search)
       params.set('page', '1')
       params.set('limit', '20')
 
+      console.log('Fetching stores with params:', params.toString())
       const response = await fetch(`/api/stores?${params.toString()}`)
       const data = await response.json()
+      console.log('Stores API response:', data)
 
       if (data.success) {
         setStores(data.data.stores)
