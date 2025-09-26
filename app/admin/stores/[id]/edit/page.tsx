@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save, X } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
-import { Store, Category, Area } from '@/lib/types'
+import { Store, CategoryTag, Area } from '@/lib/types'
 
 interface EditStorePageProps {
   params: {
@@ -17,12 +17,12 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [store, setStore] = useState<Store | null>(null)
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categoryTags, setCategoryTags] = useState<CategoryTag[]>([])
   const [areas, setAreas] = useState<Area[]>([])
   const [formData, setFormData] = useState({
     name: '',
     area_id: '',
-    category_id: '',
+    category_tag_ids: [] as number[],
     x_link: '',
     instagram_link: '',
     website_link: '',
@@ -34,7 +34,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
 
   useEffect(() => {
     fetchStore()
-    fetchCategories()
+    fetchCategoryTags()
     fetchAreas()
   }, [params.id])
 
@@ -48,7 +48,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
         setFormData({
           name: storeData.name || '',
           area_id: storeData.area_id?.toString() || '',
-          category_id: storeData.category_id?.toString() || '',
+          category_tag_ids: storeData.category_tags?.map((tag: any) => tag.category_tag.id) || [],
           x_link: storeData.x_link || '',
           instagram_link: storeData.instagram_link || '',
           website_link: storeData.website_link || '',
@@ -70,15 +70,15 @@ export default function EditStorePage({ params }: EditStorePageProps) {
     }
   }
 
-  const fetchCategories = async () => {
+  const fetchCategoryTags = async () => {
     try {
-      const response = await fetch('/api/categories')
+      const response = await fetch('/api/category-tags')
       if (response.ok) {
         const data = await response.json()
-        setCategories(data.data.categories || [])
+        setCategoryTags(data.data.category_tags || [])
       }
     } catch (error) {
-      console.error('Error fetching categories:', error)
+      console.error('Error fetching category tags:', error)
     }
   }
 
@@ -104,7 +104,10 @@ export default function EditStorePage({ params }: EditStorePageProps) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          category_tag_ids: formData.category_tag_ids
+        })
       })
 
       if (response.ok) {
@@ -203,25 +206,40 @@ export default function EditStorePage({ params }: EditStorePageProps) {
                 </select>
               </div>
 
-              <div>
-                <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-1">
-                  カテゴリ <span className="text-red-500">*</span>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  カテゴリタグ
                 </label>
-                <select
-                  id="category_id"
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">カテゴリを選択</option>
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.display_name}
-                    </option>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {categoryTags.map(tag => (
+                    <label key={tag.id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        value={tag.id}
+                        checked={formData.category_tag_ids.includes(tag.id)}
+                        onChange={(e) => {
+                          const tagId = tag.id
+                          if (e.target.checked) {
+                            setFormData(prev => ({
+                              ...prev,
+                              category_tag_ids: [...prev.category_tag_ids, tagId]
+                            }))
+                          } else {
+                            setFormData(prev => ({
+                              ...prev,
+                              category_tag_ids: prev.category_tag_ids.filter(id => id !== tagId)
+                            }))
+                          }
+                        }}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-900">{tag.display_name}</span>
+                    </label>
                   ))}
-                </select>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  複数のカテゴリタグを選択できます
+                </p>
               </div>
 
               <div>

@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit, Trash2, ArrowLeft, Search } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
-import { Store, Category, Area } from '@/lib/types'
+import { Store, CategoryTag, Area } from '@/lib/types'
 
 export default function AdminStoresPage() {
   const router = useRouter()
   const [stores, setStores] = useState<Store[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categoryTags, setCategoryTags] = useState<CategoryTag[]>([])
   const [areas, setAreas] = useState<Area[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -17,7 +17,7 @@ export default function AdminStoresPage() {
 
   useEffect(() => {
     fetchStores()
-    fetchCategories()
+    fetchCategoryTags()
     fetchAreas()
   }, [])
 
@@ -47,16 +47,16 @@ export default function AdminStoresPage() {
     }
   }
 
-  const fetchCategories = async () => {
+  const fetchCategoryTags = async () => {
     try {
-      const response = await fetch('/api/categories')
+      const response = await fetch('/api/category-tags')
       if (response.ok) {
         const data = await response.json()
-        console.log('Categories API response:', data)
-        setCategories(data.data.categories || [])
+        console.log('Category tags API response:', data)
+        setCategoryTags(data.data.category_tags || [])
       }
     } catch (error) {
-      console.error('Error fetching categories:', error)
+      console.error('Error fetching category tags:', error)
     }
   }
 
@@ -94,10 +94,9 @@ export default function AdminStoresPage() {
     }
   }
 
-  const getCategoryName = (categoryId: number) => {
-    const category = categories.find(c => c.id === categoryId)
-    console.log('Getting category name for ID:', categoryId, 'Found:', category)
-    return category?.display_name || '不明'
+  const getCategoryTagNames = (categoryTags: CategoryTag[]) => {
+    if (!categoryTags || categoryTags.length === 0) return 'タグなし'
+    return categoryTags.map(tag => tag.display_name).join(', ')
   }
 
   const getAreaName = (areaId: number) => {
@@ -182,7 +181,7 @@ export default function AdminStoresPage() {
                       エリア
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      カテゴリ
+                      カテゴリタグ
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       ステータス
@@ -212,7 +211,7 @@ export default function AdminStoresPage() {
                         {getAreaName(store.area_id)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {getCategoryName(store.category_id)}
+                        {getCategoryTagNames(store.category_tags || [])}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${

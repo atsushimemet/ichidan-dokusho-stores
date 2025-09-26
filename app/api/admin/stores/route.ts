@@ -79,10 +79,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, area_id, category_id, x_link, instagram_link, website_link, x_post_url, google_map_link, description } = body
+    const { name, area_id, category_tag_ids, x_link, instagram_link, website_link, x_post_url, google_map_link, description } = body
 
     // バリデーション
-    if (!name || !area_id || !category_id) {
+    if (!name || !area_id) {
       return NextResponse.json(
         {
           success: false,
@@ -121,7 +121,6 @@ export async function POST(request: NextRequest) {
       .insert({
         name,
         area_id: parseInt(area_id, 10),
-        category_id: parseInt(category_id, 10),
         x_link,
         instagram_link,
         website_link,
@@ -145,6 +144,23 @@ export async function POST(request: NextRequest) {
         },
         { status: 500 }
       )
+    }
+
+    // カテゴリタグの関連付け
+    if (category_tag_ids && category_tag_ids.length > 0) {
+      const storeCategoryTags = category_tag_ids.map((tagId: number) => ({
+        store_id: store.id,
+        category_tag_id: tagId
+      }))
+
+      const { error: tagError } = await supabase
+        .from('store_category_tags')
+        .insert(storeCategoryTags)
+
+      if (tagError) {
+        console.error('Error creating store category tags:', tagError)
+        // 書店は作成済みなので、エラーをログに記録するが処理は続行
+      }
     }
 
     return NextResponse.json({

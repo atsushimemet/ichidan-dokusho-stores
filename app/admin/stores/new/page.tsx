@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Card, Input } from '@/components/ui'
-import { Area, Category } from '@/lib/types'
+import { Area, CategoryTag } from '@/lib/types'
 import { ArrowLeft, Save } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ export default function NewStorePage() {
   const [formData, setFormData] = useState({
     name: '',
     area_id: '',
-    category_id: '',
+    category_tag_ids: [] as number[],
     x_link: '',
     instagram_link: '',
     website_link: '',
@@ -19,30 +19,30 @@ export default function NewStorePage() {
     description: '',
     is_active: true
   })
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categoryTags, setCategoryTags] = useState<CategoryTag[]>([])
   const [areas, setAreas] = useState<Area[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
 
   useEffect(() => {
-    fetchCategoriesAndAreas()
+    fetchCategoryTagsAndAreas()
   }, [])
 
-  const fetchCategoriesAndAreas = async () => {
+  const fetchCategoryTagsAndAreas = async () => {
     try {
-      const [categoriesRes, areasRes] = await Promise.all([
-        fetch('/api/categories'),
+      const [categoryTagsRes, areasRes] = await Promise.all([
+        fetch('/api/category-tags'),
         fetch('/api/areas')
       ])
       
-      const categoriesData = await categoriesRes.json()
+      const categoryTagsData = await categoryTagsRes.json()
       const areasData = await areasRes.json()
       
-      setCategories(categoriesData.data.categories || [])
+      setCategoryTags(categoryTagsData.data.category_tags || [])
       setAreas(areasData.data.areas || [])
     } catch (error) {
-      console.error('Failed to fetch categories and areas:', error)
+      console.error('Failed to fetch category tags and areas:', error)
     }
   }
 
@@ -57,7 +57,10 @@ export default function NewStorePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          category_tag_ids: formData.category_tag_ids
+        }),
       })
 
       if (response.ok) {
@@ -143,25 +146,40 @@ export default function NewStorePage() {
                   </select>
                 </div>
 
-                <div>
-                  <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-1">
-                    カテゴリ *
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    カテゴリタグ
                   </label>
-                  <select
-                    id="category_id"
-                    name="category_id"
-                    value={formData.category_id}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">カテゴリを選択</option>
-                    {categories.map(category => (
-                      <option key={category.id} value={category.id}>
-                        {category.display_name}
-                      </option>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {categoryTags.map(tag => (
+                      <label key={tag.id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          value={tag.id}
+                          checked={formData.category_tag_ids.includes(tag.id)}
+                          onChange={(e) => {
+                            const tagId = tag.id
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                category_tag_ids: [...prev.category_tag_ids, tagId]
+                              }))
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                category_tag_ids: prev.category_tag_ids.filter(id => id !== tagId)
+                              }))
+                            }
+                          }}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-2 text-sm text-gray-900">{tag.display_name}</span>
+                      </label>
                     ))}
-                  </select>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">
+                    複数のカテゴリタグを選択できます
+                  </p>
                 </div>
 
                 <div className="flex items-center">

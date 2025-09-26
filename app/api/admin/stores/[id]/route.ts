@@ -67,10 +67,10 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json()
-    const { name, area_id, category_id, x_link, instagram_link, website_link, x_post_url, google_map_link, description, is_active } = body
+    const { name, area_id, category_tag_ids, x_link, instagram_link, website_link, x_post_url, google_map_link, description, is_active } = body
 
     // バリデーション
-    if (!name || !area_id || !category_id) {
+    if (!name || !area_id) {
       return NextResponse.json(
         {
           success: false,
@@ -131,7 +131,6 @@ export async function PATCH(
       .update({
         name,
         area_id: parseInt(area_id, 10),
-        category_id: parseInt(category_id, 10),
         x_link,
         instagram_link,
         website_link,
@@ -157,6 +156,35 @@ export async function PATCH(
         },
         { status: 500 }
       )
+    }
+
+    // カテゴリタグの関連付けを更新
+    if (category_tag_ids !== undefined) {
+      // 既存のカテゴリタグを削除
+      const { error: deleteError } = await supabase
+        .from('store_category_tags')
+        .delete()
+        .eq('store_id', params.id)
+
+      if (deleteError) {
+        console.error('Error deleting existing category tags:', deleteError)
+      }
+
+      // 新しいカテゴリタグを追加
+      if (category_tag_ids && category_tag_ids.length > 0) {
+        const storeCategoryTags = category_tag_ids.map((tagId: number) => ({
+          store_id: params.id,
+          category_tag_id: tagId
+        }))
+
+        const { error: tagError } = await supabase
+          .from('store_category_tags')
+          .insert(storeCategoryTags)
+
+        if (tagError) {
+          console.error('Error creating store category tags:', tagError)
+        }
+      }
     }
 
     return NextResponse.json({
