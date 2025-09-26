@@ -32,6 +32,16 @@ FOR DELETE USING (true);
 CREATE POLICY "Enable insert for authenticated users" ON categories
 FOR INSERT WITH CHECK (true);
 
+-- storesテーブルのRLSポリシー
+CREATE POLICY "Enable insert for authenticated users" ON stores
+FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for authenticated users" ON stores
+FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for authenticated users" ON stores
+FOR DELETE USING (true);
+
 -- =============================================
 -- 2. 権限の追加
 -- =============================================
@@ -43,6 +53,9 @@ GRANT INSERT ON areas TO authenticated;
 GRANT UPDATE ON categories TO authenticated;
 GRANT DELETE ON categories TO authenticated;
 GRANT INSERT ON categories TO authenticated;
+GRANT INSERT ON stores TO authenticated;
+GRANT UPDATE ON stores TO authenticated;
+GRANT DELETE ON stores TO authenticated;
 
 -- =============================================
 -- 3. 確認用クエリ
@@ -54,7 +67,7 @@ SELECT
     privilege_type,
     grantee
 FROM information_schema.table_privileges 
-WHERE table_name IN ('areas', 'categories')
+WHERE table_name IN ('areas', 'categories', 'stores')
 AND grantee = 'authenticated'
 ORDER BY table_name, privilege_type;
 
@@ -68,5 +81,5 @@ SELECT
     cmd,
     qual
 FROM pg_policies 
-WHERE tablename IN ('areas', 'categories')
+WHERE tablename IN ('areas', 'categories', 'stores')
 ORDER BY tablename, policyname;

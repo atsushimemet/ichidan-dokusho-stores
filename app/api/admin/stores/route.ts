@@ -1,64 +1,98 @@
-import { getCurrentAdmin } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
+// 書店一覧取得
 export async function GET(request: NextRequest) {
   try {
-    // 管理者認証チェック
-    const admin = await getCurrentAdmin()
-    if (!admin) {
-      return NextResponse.json({ error: '認証が必要です' }, { status: 401 })
-    }
-
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1', 10)
-    const limit = parseInt(searchParams.get('limit') || '20', 10)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '50')
+    const search = searchParams.get('search')
 
-    const startIndex = (page - 1) * limit
-    const endIndex = startIndex + limit - 1
-
-    const { data: stores, error, count } = await supabase
+    // クエリ構築
+    let query = supabase
       .from('stores')
       .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(startIndex, endIndex)
 
-    if (error) {
-      console.error('Error fetching stores:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    // 検索フィルター
+    if (search) {
+      query = query.ilike('name', `%${search}%`)
     }
 
-    const totalPages = count ? Math.ceil(count / limit) : 0
+    // ページネーション
+    const from = (page - 1) * limit
+    const to = from + limit - 1
+    query = query.range(from, to)
+
+    // ソート
+    query = query.order('created_at', { ascending: false })
+
+    const { data: stores, error, count } = await query
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'DATABASE_ERROR',
+            message: 'データベースエラーが発生しました'
+          }
+        },
+        { status: 500 }
+      )
+    }
+
+    const total = count || 0
+    const totalPages = Math.ceil(total / limit)
 
     return NextResponse.json({
-      stores,
-      page,
-      limit,
-      total: count,
-      totalPages,
+      success: true,
+      data: {
+        stores: stores || [],
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages
+        }
+      }
     })
   } catch (error) {
-    console.error('Unexpected error in GET /api/admin/stores:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('API error:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: '内部サーバーエラーが発生しました'
+        }
+      },
+      { status: 500 }
+    )
   }
 }
 
+// 書店作成
 export async function POST(request: NextRequest) {
   try {
-    // 管理者認証チェック
-    const admin = await getCurrentAdmin()
-    if (!admin) {
-      return NextResponse.json({ error: '認証が必要です' }, { status: 401 })
-    }
-
     const body = await request.json()
-    const { name, area_id, category_id, x_link, instagram_link, website_link, x_post_url, google_map_link, description, is_active } = body
+    const { name, area_id, category_id, x_link, instagram_link, website_link, x_post_url, google_map_link, description } = body
 
     // バリデーション
     if (!name || !area_id || !category_id) {
-      return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 })
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: '必須項目が不足しています'
+          }
+        },
+        { status: 400 }
+      )
     }
 
     // 書店名の重複チェック
@@ -69,38 +103,65 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (existingStore) {
-      return NextResponse.json({ error: 'この書店名は既に登録されています' }, { status: 400 })
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'DUPLICATE_ERROR',
+            message: 'この書店名は既に登録されています'
+          }
+        },
+        { status: 400 }
+      )
     }
 
-    // 書店を登録
+    // 書店作成
     const { data: store, error } = await supabase
       .from('stores')
       .insert({
         name,
         area_id: parseInt(area_id, 10),
         category_id: parseInt(category_id, 10),
-        x_link: x_link || null,
-        instagram_link: instagram_link || null,
-        website_link: website_link || null,
-        x_post_url: x_post_url || null,
-        google_map_link: google_map_link || null,
-        description: description || null,
-        is_active: is_active !== false
+        x_link,
+        instagram_link,
+        website_link,
+        x_post_url,
+        google_map_link,
+        description,
+        is_active: true
       })
       .select()
       .single()
 
     if (error) {
-      console.error('Error creating store:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('Database error:', error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'DATABASE_ERROR',
+            message: 'データベースエラーが発生しました'
+          }
+        },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json({ 
-      message: '書店が正常に登録されました',
-      store 
-    }, { status: 201 })
+    return NextResponse.json({
+      success: true,
+      data: { store }
+    })
   } catch (error) {
-    console.error('Unexpected error in POST /api/admin/stores:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('API error:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: '内部サーバーエラーが発生しました'
+        }
+      },
+      { status: 500 }
+    )
   }
 }

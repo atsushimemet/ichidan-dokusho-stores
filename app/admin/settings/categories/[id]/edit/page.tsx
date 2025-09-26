@@ -102,7 +102,7 @@ export default function EditCategoryPage() {
           <div className="flex items-center h-16">
             <Button
               variant="outline"
-              onClick={() => router.back()}
+              onClick={() => router.push('/admin/dashboard')}
               className="mr-4"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -201,7 +201,7 @@ export default function EditCategoryPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.back()}
+                onClick={() => router.push('/admin/dashboard')}
               >
                 キャンセル
               </Button>
