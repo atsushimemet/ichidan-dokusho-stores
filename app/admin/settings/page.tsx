@@ -64,6 +64,26 @@ export default function AdminSettingsPage() {
     }
   }
 
+  const handleDeleteArea = async (areaId: number) => {
+    if (!confirm('このエリアを削除しますか？')) return
+
+    try {
+      const response = await fetch(`/api/admin/areas/${areaId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setAreas(areas.filter(area => area.id !== areaId))
+      } else {
+        const error = await response.json()
+        alert(`削除に失敗しました: ${error.error?.message}`)
+      }
+    } catch (error) {
+      console.error('Error deleting area:', error)
+      alert('削除に失敗しました')
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -261,34 +281,139 @@ export default function AdminSettingsPage() {
 
         {activeTab === 'areas' && (
           <div className="space-y-6">
-            <Card>
-              <CardContent className="p-6">
-                <div className="text-center">
-                  <MapPin className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    エリア管理
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    書店の所在地となるエリアを管理します。
-                  </p>
-                  <div className="space-y-4">
-                    <Button
-                      onClick={() => router.push('/admin/settings/areas')}
-                      className="w-full"
-                    >
-                      エリア一覧
-                    </Button>
-                    <Button
-                      onClick={() => router.push('/admin/settings/areas/new')}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      新規エリア登録
-                    </Button>
+            {/* アクションボタン */}
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-900">エリア管理</h2>
+              <Button
+                onClick={() => router.push('/admin/settings/areas/new')}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                新規登録
+              </Button>
+            </div>
+
+            {/* エリア一覧 */}
+            <div className="bg-white shadow rounded-lg">
+              {areas.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 mb-4">登録されたエリアがありません</p>
+                  <Button
+                    onClick={() => router.push('/admin/settings/areas/new')}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    最初のエリアを作成
+                  </Button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          エリア名
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          都道府県
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          並び順
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ステータス
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          登録日
+                        </th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          操作
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {areas.map((area) => (
+                        <tr key={area.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">
+                              {area.name}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {area.prefecture}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {area.sort_order}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              area.is_active 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {area.is_active ? 'アクティブ' : '非アクティブ'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(area.created_at).toLocaleDateString('ja-JP')}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex justify-end space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => router.push(`/admin/settings/areas/${area.id}/edit`)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteArea(area.id)}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* 統計情報 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
+                      <span className="text-green-600 font-semibold">総</span>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-500">総エリア数</p>
+                    <p className="text-2xl font-semibold text-gray-900">{areas.length}</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
+                      <span className="text-blue-600 font-semibold">活</span>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-500">アクティブ</p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {areas.filter(area => area.is_active).length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
