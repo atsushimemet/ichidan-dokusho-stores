@@ -52,10 +52,10 @@ export default function AdminDashboard() {
       const areasData = await areasRes.json()
 
       setStats({
-        totalStores: storesData.total || 0,
-        activeStores: storesData.stores?.filter((s: Store) => s.is_active).length || 0,
-        totalCategories: categoriesData.length || 0,
-        totalAreas: areasData.length || 0
+        totalStores: storesData.data?.pagination?.total || 0,
+        activeStores: storesData.data?.stores?.filter((s: Store) => s.is_active).length || 0,
+        totalCategories: categoriesData.data?.categories?.length || 0,
+        totalAreas: areasData.data?.areas?.length || 0
       })
     } catch (error) {
       console.error('Failed to fetch stats:', error)
