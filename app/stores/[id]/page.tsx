@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { MapPin, ExternalLink, Twitter, Instagram, Globe } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui'
-import { Store } from '@/lib/types'
+import { Store, Area } from '@/lib/types'
 
 export default function StoreDetailPage() {
   const [store, setStore] = useState<Store | null>(null)
+  const [areas, setAreas] = useState<Area[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const params = useParams()
@@ -15,6 +16,7 @@ export default function StoreDetailPage() {
 
   useEffect(() => {
     fetchStore()
+    fetchAreas()
   }, [storeId])
 
   const fetchStore = async () => {
@@ -33,6 +35,23 @@ export default function StoreDetailPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const fetchAreas = async () => {
+    try {
+      const response = await fetch('/api/areas')
+      const data = await response.json()
+      if (data.success) {
+        setAreas(data.data.areas || [])
+      }
+    } catch (error) {
+      console.error('Error fetching areas:', error)
+    }
+  }
+
+  const getAreaName = (areaId: number) => {
+    const area = areas.find(a => a.id === areaId)
+    return area?.name || '不明'
   }
 
   if (loading) {
@@ -84,12 +103,12 @@ export default function StoreDetailPage() {
                     title="Google Mapで開く"
                   >
                     <MapPin className="w-5 h-5 mr-2" />
-                    {store.area}
+                    {getAreaName(store.area_id)}
                   </a>
                 ) : (
                   <>
                     <MapPin className="w-5 h-5 mr-2" />
-                    {store.area}
+                    {getAreaName(store.area_id)}
                   </>
                 )}
               </div>
