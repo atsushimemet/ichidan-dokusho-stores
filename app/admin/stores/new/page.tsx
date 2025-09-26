@@ -39,8 +39,8 @@ export default function NewStorePage() {
       const categoriesData = await categoriesRes.json()
       const areasData = await areasRes.json()
       
-      setCategories(categoriesData)
-      setAreas(areasData)
+      setCategories(categoriesData.data.categories || [])
+      setAreas(areasData.data.areas || [])
     } catch (error) {
       console.error('Failed to fetch categories and areas:', error)
     }
