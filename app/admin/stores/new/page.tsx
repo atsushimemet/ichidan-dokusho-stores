@@ -67,7 +67,24 @@ export default function NewStorePage() {
         router.push('/admin/stores')
       } else {
         const data = await response.json()
-        setError(data.error || '書店の登録に失敗しました')
+        console.error('Store creation error:', data)
+        
+        // エラーメッセージの安全な取得
+        let errorMessage = '書店の登録に失敗しました'
+        
+        if (data.error) {
+          if (typeof data.error === 'string') {
+            errorMessage = data.error
+          } else if (typeof data.error === 'object' && data.error.message) {
+            errorMessage = data.error.message
+          } else if (typeof data.error === 'object' && data.error.code) {
+            errorMessage = `エラー: ${data.error.code}`
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        
+        setError(errorMessage)
       }
     } catch (err) {
       setError('ネットワークエラーが発生しました')

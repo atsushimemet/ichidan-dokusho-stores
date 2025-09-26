@@ -117,7 +117,12 @@ export default function EditStorePage({ params }: EditStorePageProps) {
         router.push('/admin/dashboard')
       } else {
         const error = await response.json()
-        alert(`更新に失敗しました: ${error.error?.message || '不明なエラー'}`)
+        console.error('Store update error:', error)
+        if (error.error && typeof error.error === 'object') {
+          alert(`更新に失敗しました: ${error.error.message || '不明なエラー'}`)
+        } else {
+          alert(`更新に失敗しました: ${error.error || '不明なエラー'}`)
+        }
       }
     } catch (error) {
       console.error('Error updating store:', error)
