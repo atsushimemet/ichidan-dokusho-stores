@@ -37,6 +37,7 @@ export default function AdminStoresPage() {
       const response = await fetch('/api/admin/stores')
       if (response.ok) {
         const data = await response.json()
+        console.log('Stores API response:', data)
         setStores(data.data.stores || [])
       }
     } catch (error) {
@@ -51,6 +52,7 @@ export default function AdminStoresPage() {
       const response = await fetch('/api/categories')
       if (response.ok) {
         const data = await response.json()
+        console.log('Categories API response:', data)
         setCategories(data.data.categories || [])
       }
     } catch (error) {
@@ -63,6 +65,7 @@ export default function AdminStoresPage() {
       const response = await fetch('/api/areas')
       if (response.ok) {
         const data = await response.json()
+        console.log('Areas API response:', data)
         setAreas(data.data.areas || [])
       }
     } catch (error) {
@@ -93,11 +96,13 @@ export default function AdminStoresPage() {
 
   const getCategoryName = (categoryId: number) => {
     const category = categories.find(c => c.id === categoryId)
+    console.log('Getting category name for ID:', categoryId, 'Found:', category)
     return category?.display_name || '不明'
   }
 
   const getAreaName = (areaId: number) => {
     const area = areas.find(a => a.id === areaId)
+    console.log('Getting area name for ID:', areaId, 'Found:', area)
     return area?.name || '不明'
   }
 

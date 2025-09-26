@@ -16,7 +16,10 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(areas)
+    return NextResponse.json({
+      success: true,
+      data: { areas }
+    })
   } catch (error) {
     console.error('Unexpected error in GET /api/areas:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
