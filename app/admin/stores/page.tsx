@@ -37,7 +37,7 @@ export default function AdminStoresPage() {
       const response = await fetch('/api/admin/stores')
       if (response.ok) {
         const data = await response.json()
-        setStores(data.stores || [])
+        setStores(data.data.stores || [])
       }
     } catch (error) {
       console.error('Error fetching stores:', error)
@@ -51,7 +51,7 @@ export default function AdminStoresPage() {
       const response = await fetch('/api/categories')
       if (response.ok) {
         const data = await response.json()
-        setCategories(data.categories || [])
+        setCategories(data.data.categories || [])
       }
     } catch (error) {
       console.error('Error fetching categories:', error)
@@ -63,7 +63,7 @@ export default function AdminStoresPage() {
       const response = await fetch('/api/areas')
       if (response.ok) {
         const data = await response.json()
-        setAreas(data.areas || [])
+        setAreas(data.data.areas || [])
       }
     } catch (error) {
       console.error('Error fetching areas:', error)
