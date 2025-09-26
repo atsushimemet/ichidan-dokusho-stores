@@ -95,20 +95,21 @@ export default function StoreDetailPage() {
               </div>
               
               <div className="flex flex-wrap gap-2 mb-6">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                  {getCategoryDisplayName(store.category)}
-                </span>
-                {store.category_tags && store.category_tags.length > 0 && (
+                {store.category_tags && store.category_tags.length > 0 ? (
                   <>
-                    {store.category_tags.map((tag) => (
+                    {store.category_tags.map((tag: any) => (
                       <span
-                        key={tag.id}
+                        key={tag.category_tag.id}
                         className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
                       >
-                        {tag.display_name}
+                        {tag.category_tag.display_name}
                       </span>
                     ))}
                   </>
+                ) : (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                    タグなし
+                  </span>
                 )}
               </div>
             </div>
