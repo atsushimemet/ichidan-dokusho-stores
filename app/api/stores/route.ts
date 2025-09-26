@@ -20,12 +20,15 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
 
     // フィルター適用
+    console.log('API params:', { area_id, area_ids, category_id, search })
+    
     if (area_id) {
       query = query.eq('area_id', parseInt(area_id, 10))
     }
     if (area_ids) {
       // 複数のエリアIDで検索（都道府県検索用）
       const areaIdArray = area_ids.split(',').map(id => parseInt(id.trim(), 10))
+      console.log('Area IDs array:', areaIdArray)
       query = query.in('area_id', areaIdArray)
     }
     if (category_id) {
@@ -44,6 +47,8 @@ export async function GET(request: NextRequest) {
     query = query.order('created_at', { ascending: false })
 
     const { data: stores, error, count } = await query
+
+    console.log('Query result:', { stores, error, count })
 
     if (error) {
       console.error('Database error:', error)

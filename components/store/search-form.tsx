@@ -40,15 +40,22 @@ export function SearchForm({
     e.preventDefault()
     const params = new URLSearchParams()
     
+    console.log('Selected prefecture:', prefecture)
+    console.log('All areas:', areas)
+    
     if (prefecture) {
       // 都道府県が選択された場合、その都道府県のエリアIDを取得して検索
       const prefectureAreas = areas.filter(area => area.prefecture === prefecture)
+      console.log('Prefecture areas:', prefectureAreas)
+      
       if (prefectureAreas.length > 0) {
         const areaIds = prefectureAreas.map(area => area.id).join(',')
+        console.log('Area IDs:', areaIds)
         params.set('area_ids', areaIds)
       }
     }
     
+    console.log('Final params:', params.toString())
     router.push(`/stores?${params.toString()}`)
   }
 
