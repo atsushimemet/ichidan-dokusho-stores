@@ -108,10 +108,10 @@ export default function AdminSettingsPage() {
             <Button
               variant="outline"
               onClick={() => router.push('/admin/dashboard')}
-              className="mr-4"
+              className="mr-4 px-3"
+              title="戻る"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              戻る
+              <ArrowLeft className="h-4 w-4" />
             </Button>
             <h1 className="text-3xl font-bold text-gray-900">設定</h1>
           </div>
@@ -154,10 +154,10 @@ export default function AdminSettingsPage() {
               <h2 className="text-xl font-semibold text-gray-900">カテゴリタグ管理</h2>
               <Button
                 onClick={() => router.push('/admin/settings/category-tags/new')}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 px-3"
+                title="新規登録"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                新規登録
+                <Plus className="h-4 w-4" />
               </Button>
             </div>
 
@@ -286,10 +286,10 @@ export default function AdminSettingsPage() {
               <h2 className="text-xl font-semibold text-gray-900">エリア管理</h2>
               <Button
                 onClick={() => router.push('/admin/settings/areas/new')}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-green-600 hover:bg-green-700 px-3"
+                title="新規登録"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                新規登録
+                <Plus className="h-4 w-4" />
               </Button>
             </div>
 
