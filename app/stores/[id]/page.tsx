@@ -155,30 +155,22 @@ export default function StoreDetailPage() {
                     <ExternalLink className="w-4 h-4 ml-auto text-gray-400" />
                   </a>
                 )}
-              </div>
-            </div>
 
-            {store.x_post_url && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  書店の紹介
-                </h2>
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <p className="text-gray-600 text-sm">
-                    Xポストの埋め込み表示は実装予定です
-                  </p>
+                {store.x_post_url && (
                   <a
                     href={store.x_post_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2"
+                    className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    紹介ポストを見る
+                    <Twitter className="w-5 h-5 text-blue-500 mr-3" />
+                    <span className="font-medium">紹介ポスト</span>
+                    <ExternalLink className="w-4 h-4 ml-auto text-gray-400" />
                   </a>
-                </div>
+                )}
               </div>
-            )}
+            </div>
+
 
             <div className="flex justify-center">
               <a
