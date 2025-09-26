@@ -30,12 +30,13 @@ CREATE TABLE areas (
 CREATE TABLE stores (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(200) NOT NULL,
-  area VARCHAR(100) NOT NULL,
-  category VARCHAR(50) NOT NULL,
+  area_id INTEGER NOT NULL,
+  category_id INTEGER NOT NULL,
   x_link VARCHAR(500),
   instagram_link VARCHAR(500),
   website_link VARCHAR(500),
   x_post_url VARCHAR(500),
+  google_map_link VARCHAR(500),
   description TEXT,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -47,8 +48,8 @@ CREATE TABLE stores (
 -- =============================================
 
 -- storesテーブルのインデックス
-CREATE INDEX idx_stores_area ON stores(area);
-CREATE INDEX idx_stores_category ON stores(category);
+CREATE INDEX idx_stores_area_id ON stores(area_id);
+CREATE INDEX idx_stores_category_id ON stores(category_id);
 CREATE INDEX idx_stores_is_active ON stores(is_active);
 CREATE INDEX idx_stores_name ON stores(name);
 CREATE INDEX idx_stores_created_at ON stores(created_at);
@@ -67,12 +68,12 @@ CREATE INDEX idx_areas_sort_order ON areas(sort_order);
 
 -- storesテーブルの外部キー制約
 ALTER TABLE stores 
-ADD CONSTRAINT fk_stores_category 
-FOREIGN KEY (category) REFERENCES categories(name) ON DELETE RESTRICT;
+ADD CONSTRAINT fk_stores_category_id 
+FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT;
 
 ALTER TABLE stores 
-ADD CONSTRAINT fk_stores_area 
-FOREIGN KEY (area) REFERENCES areas(name) ON DELETE RESTRICT;
+ADD CONSTRAINT fk_stores_area_id 
+FOREIGN KEY (area_id) REFERENCES areas(id) ON DELETE RESTRICT;
 
 -- =============================================
 -- 4. チェック制約
@@ -173,10 +174,10 @@ INSERT INTO areas (name, prefecture, sort_order) VALUES
 ('仙台', '宮城県', 8);
 
 -- サンプル書店データ
-INSERT INTO stores (name, area, category, description, website_link) VALUES
-('サンプル書店1', '東京', 'book_cafe', '本とコーヒーが楽しめる書店です。', 'https://example.com'),
-('サンプル書店2', '大阪', 'used_book', '古本を中心に扱う書店です。', 'https://example.com'),
-('サンプル書店3', '京都', 'children_book', '子ども向けの本を専門に扱います。', 'https://example.com');
+INSERT INTO stores (name, area_id, category_id, description, website_link, google_map_link) VALUES
+('サンプル書店1', 1, 1, '本とコーヒーが楽しめる書店です。', 'https://example.com', 'https://maps.google.com/?q=東京+書店'),
+('サンプル書店2', 2, 2, '古本を中心に扱う書店です。', 'https://example.com', 'https://maps.google.com/?q=大阪+古書店'),
+('サンプル書店3', 3, 3, '子ども向けの本を専門に扱います。', 'https://example.com', 'https://maps.google.com/?q=京都+児童書店');
 
 -- =============================================
 -- 8. 権限設定
@@ -201,11 +202,12 @@ COMMENT ON TABLE categories IS '書店カテゴリを管理するテーブル';
 COMMENT ON TABLE areas IS 'エリア情報を管理するテーブル';
 
 COMMENT ON COLUMN stores.name IS '書店名';
-COMMENT ON COLUMN stores.area IS 'エリア名';
-COMMENT ON COLUMN stores.category IS 'カテゴリ名';
+COMMENT ON COLUMN stores.area_id IS 'エリアID';
+COMMENT ON COLUMN stores.category_id IS 'カテゴリID';
 COMMENT ON COLUMN stores.x_link IS 'X（Twitter）のリンク';
 COMMENT ON COLUMN stores.instagram_link IS 'Instagramのリンク';
 COMMENT ON COLUMN stores.website_link IS '公式ウェブサイトのリンク';
 COMMENT ON COLUMN stores.x_post_url IS 'XポストのURL';
+COMMENT ON COLUMN stores.google_map_link IS 'Google Mapのリンク';
 COMMENT ON COLUMN stores.description IS '書店の説明';
 COMMENT ON COLUMN stores.is_active IS 'アクティブフラグ';

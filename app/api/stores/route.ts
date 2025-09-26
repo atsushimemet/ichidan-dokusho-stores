@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const area = searchParams.get('area')
-    const category = searchParams.get('category')
+    const area_id = searchParams.get('area_id')
+    const category_id = searchParams.get('category_id')
     const search = searchParams.get('search')
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
@@ -19,11 +19,11 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
 
     // フィルター適用
-    if (area) {
-      query = query.eq('area', area)
+    if (area_id) {
+      query = query.eq('area_id', parseInt(area_id, 10))
     }
-    if (category) {
-      query = query.eq('category', category)
+    if (category_id) {
+      query = query.eq('category_id', parseInt(category_id, 10))
     }
     if (search) {
       query = query.ilike('name', `%${search}%`)

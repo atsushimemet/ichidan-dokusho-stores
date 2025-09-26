@@ -2,12 +2,13 @@
 export interface Store {
   id: string;
   name: string;
-  area: string;
-  category: string;
+  area_id: number;
+  category_id: number;
   x_link?: string;
   instagram_link?: string;
   website_link?: string;
   x_post_url?: string;
+  google_map_link?: string;
   description?: string;
   is_active: boolean;
   created_at: string;
@@ -71,8 +72,8 @@ export interface StoresResponse {
 
 // 検索フィルターの型定義
 export interface StoreFilters {
-  area?: string;
-  category?: string;
+  area_id?: number;
+  category_id?: number;
   search?: string;
   page?: number;
   limit?: number;

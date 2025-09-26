@@ -54,10 +54,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, area, category, x_link, instagram_link, website_link, x_post_url, description, is_active } = body
+    const { name, area_id, category_id, x_link, instagram_link, website_link, x_post_url, google_map_link, description, is_active } = body
 
     // バリデーション
-    if (!name || !area || !category) {
+    if (!name || !area_id || !category_id) {
       return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 })
     }
 
@@ -77,12 +77,13 @@ export async function POST(request: NextRequest) {
       .from('stores')
       .insert({
         name,
-        area,
-        category,
+        area_id: parseInt(area_id, 10),
+        category_id: parseInt(category_id, 10),
         x_link: x_link || null,
         instagram_link: instagram_link || null,
         website_link: website_link || null,
         x_post_url: x_post_url || null,
+        google_map_link: google_map_link || null,
         description: description || null,
         is_active: is_active !== false
       })
