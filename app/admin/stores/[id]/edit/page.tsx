@@ -44,6 +44,8 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       if (response.ok) {
         const data = await response.json()
         const storeData = data.data.store
+        console.log('Store data:', storeData)
+        console.log('Category tags:', storeData.category_tags)
         setStore(storeData)
         setFormData({
           name: storeData.name || '',
