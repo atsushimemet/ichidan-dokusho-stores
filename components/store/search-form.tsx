@@ -78,9 +78,9 @@ export function SearchForm({
   console.log('Available prefectures:', prefectures)
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
       <div className="flex justify-center">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-sm sm:max-w-md">
           <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700 mb-1">
             都道府県
           </label>
@@ -88,7 +88,7 @@ export function SearchForm({
             id="prefecture"
             value={prefecture}
             onChange={(e) => setPrefecture(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-sm"
           >
             <option value="">都道府県を選択</option>
             {prefectures.map(pref => (
@@ -100,8 +100,8 @@ export function SearchForm({
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <Button type="submit" className="flex items-center">
+      <div className="flex justify-center pt-2">
+        <Button type="submit" className="flex items-center px-6 py-2.5 sm:px-4 sm:py-2 text-base sm:text-sm">
           <Search className="w-4 h-4 mr-2" />
           検索
         </Button>
