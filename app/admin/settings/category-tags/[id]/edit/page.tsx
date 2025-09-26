@@ -179,17 +179,18 @@ export default function EditCategoryTagPage({ params }: EditCategoryTagPageProps
                 type="button"
                 variant="outline"
                 onClick={() => router.push('/admin/dashboard')}
+                className="px-3"
+                title="キャンセル"
               >
-                <X className="h-4 w-4 mr-2" />
-                キャンセル
+                <X className="h-4 w-4" />
               </Button>
               <Button
                 type="submit"
                 disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 px-3"
+                title={saving ? '更新中...' : '更新'}
               >
-                <Save className="h-4 w-4 mr-2" />
-                {saving ? '更新中...' : '更新'}
+                <Save className="h-4 w-4" />
               </Button>
             </div>
           </form>

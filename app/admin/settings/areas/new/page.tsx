@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Card, Input } from '@/components/ui'
-import { ArrowLeft, Save } from 'lucide-react'
+import { ArrowLeft, Save, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -144,15 +144,18 @@ export default function NewAreaPage() {
                 type="button"
                 variant="outline"
                 onClick={() => router.push('/admin/dashboard')}
+                className="px-3"
+                title="キャンセル"
               >
-                キャンセル
+                <X className="h-4 w-4" />
               </Button>
               <Button
                 type="submit"
                 disabled={loading}
+                className="px-3"
+                title={loading ? '保存中...' : 'エリアを登録'}
               >
-                <Save className="h-4 w-4 mr-2" />
-                {loading ? '保存中...' : 'エリアを登録'}
+                <Save className="h-4 w-4" />
               </Button>
             </div>
           </form>
