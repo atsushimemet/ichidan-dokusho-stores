@@ -130,18 +130,24 @@ export async function PATCH(
       }
     }
 
+    // リンクフィールドの処理（空文字列はnullに変換）
+    const processLink = (link: string | undefined) => {
+      if (!link || link.trim() === '') return null
+      return link.trim()
+    }
+
     // 書店更新
     const { data: store, error } = await supabase
       .from('stores')
       .update({
         name,
         area_id: parseInt(area_id, 10),
-        x_link,
-        instagram_link,
-        website_link,
-        x_post_url,
-        google_map_link,
-        description,
+        x_link: processLink(x_link),
+        instagram_link: processLink(instagram_link),
+        website_link: processLink(website_link),
+        x_post_url: processLink(x_post_url),
+        google_map_link: processLink(google_map_link),
+        description: description?.trim() || null,
         is_active: is_active !== undefined ? is_active : true,
         updated_at: new Date().toISOString()
       })
