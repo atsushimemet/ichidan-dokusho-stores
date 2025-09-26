@@ -69,6 +69,7 @@ export function SearchForm({
 
   // 都道府県の一覧を取得（重複を除去）
   const prefectures = Array.from(new Set(areas.map(area => area.prefecture))).sort()
+  console.log('Available prefectures:', prefectures)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
