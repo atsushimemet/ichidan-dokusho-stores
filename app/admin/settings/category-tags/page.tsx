@@ -10,6 +10,7 @@ export default function CategoryTagsPage() {
   const router = useRouter()
   const [categoryTags, setCategoryTags] = useState<CategoryTag[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchCategoryTags()
@@ -17,13 +18,21 @@ export default function CategoryTagsPage() {
 
   const fetchCategoryTags = async () => {
     try {
+      setError(null)
       const response = await fetch('/api/admin/category-tags')
+      console.log('Category tags API response:', response.status)
       if (response.ok) {
         const data = await response.json()
+        console.log('Category tags data:', data)
         setCategoryTags(data.data.category_tags || [])
+      } else {
+        const errorData = await response.json()
+        console.error('Category tags API error:', errorData)
+        setError('カテゴリタグの取得に失敗しました')
       }
     } catch (error) {
       console.error('Error fetching category tags:', error)
+      setError('ネットワークエラーが発生しました')
     } finally {
       setLoading(false)
     }
@@ -97,7 +106,13 @@ export default function CategoryTagsPage() {
         <div className="bg-white shadow rounded-lg">
           {categoryTags.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">登録されたカテゴリタグがありません</p>
+              <p className="text-gray-500 mb-4">登録されたカテゴリタグがありません</p>
+              <Button
+                onClick={() => router.push('/admin/settings/category-tags/new')}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                最初のカテゴリタグを作成
+              </Button>
             </div>
           ) : (
             <div className="overflow-x-auto">

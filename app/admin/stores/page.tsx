@@ -38,6 +38,7 @@ export default function AdminStoresPage() {
       if (response.ok) {
         const data = await response.json()
         console.log('Stores API response:', data)
+        console.log('First store category tags:', data.data.stores?.[0]?.category_tags)
         setStores(data.data.stores || [])
       }
     } catch (error) {
@@ -94,9 +95,12 @@ export default function AdminStoresPage() {
     }
   }
 
-  const getCategoryTagNames = (categoryTags: CategoryTag[]) => {
+  const getCategoryTagNames = (categoryTags: any[]) => {
+    console.log('getCategoryTagNames called with:', categoryTags)
     if (!categoryTags || categoryTags.length === 0) return 'タグなし'
-    return categoryTags.map(tag => tag.display_name).join(', ')
+    const names = categoryTags.map(tag => tag.category_tag.display_name).join(', ')
+    console.log('Category tag names:', names)
+    return names
   }
 
   const getAreaName = (areaId: number) => {
