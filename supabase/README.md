@@ -31,6 +31,9 @@ cp env.example .env.local
 # Supabase設定
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# 管理者認証
+ADMIN_PASSWORD=admin123
 ```
 
 **取得方法：**
@@ -40,35 +43,48 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ## 3. データベーススキーマの作成
 
-### 3.1 SQL Editorでの実行
+### 3.1 新規プロジェクトの場合
 1. Supabase Dashboard → SQL Editor
 2. `supabase/schema.sql` の内容をコピー
 3. SQL Editorに貼り付け
 4. 「Run」ボタンをクリックして実行
 
-### 3.2 実行結果の確認
-以下のテーブルが作成されていることを確認：
-- `stores` - 書店情報
-- `categories` - カテゴリ情報  
-- `areas` - エリア情報
+### 3.2 既存プロジェクトの場合
+1. Supabase Dashboard → SQL Editor
+2. `supabase/update-permissions.sql` の内容をコピー
+3. SQL Editorに貼り付け
+4. 「Run」ボタンをクリックして実行
 
-### 3.3 初期データの確認
-Table Editorで以下を確認：
-- `categories` テーブルに5件のデータ
-- `areas` テーブルに8件のデータ
-- `stores` テーブルに3件のサンプルデータ
+## 4. 権限とRLSポリシーの確認
 
-## 4. 認証設定（オプション）
+### 4.1 権限の確認
+```sql
+-- テーブルの権限を確認
+SELECT 
+    table_name,
+    privilege_type,
+    grantee
+FROM information_schema.table_privileges 
+WHERE table_name IN ('areas', 'categories')
+AND grantee = 'authenticated'
+ORDER BY table_name, privilege_type;
+```
 
-### 4.1 認証プロバイダーの設定
-必要に応じて以下を設定：
-- Email認証
-- Google認証
-- GitHub認証
-
-### 4.2 RLS（Row Level Security）の確認
-- 全テーブルでRLSが有効化されている
-- 匿名ユーザーでも読み取り可能
+### 4.2 RLSポリシーの確認
+```sql
+-- RLSポリシーを確認
+SELECT 
+    schemaname,
+    tablename,
+    policyname,
+    permissive,
+    roles,
+    cmd,
+    qual
+FROM pg_policies 
+WHERE tablename IN ('areas', 'categories')
+ORDER BY tablename, policyname;
+```
 
 ## 5. 接続テスト
 
@@ -80,7 +96,8 @@ npm run dev
 ### 5.2 動作確認
 1. ブラウザで `http://localhost:3000` にアクセス
 2. 書店一覧ページでデータが表示されることを確認
-3. 検索・フィルタリング機能をテスト
+3. 管理者ログイン機能をテスト
+4. エリア・カテゴリの編集機能をテスト
 
 ## 6. 本番環境へのデプロイ
 
@@ -89,6 +106,7 @@ npm run dev
 2. 以下を追加：
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `ADMIN_PASSWORD`
 
 ### 6.2 デプロイ
 ```bash
@@ -106,6 +124,11 @@ vercel --prod
 **解決**: 
 - RLSポリシーが正しく設定されているか確認
 - データベースにデータが存在するか確認
+
+**問題**: エリア・カテゴリの更新ができない
+**解決**: 
+- `update-permissions.sql` を実行して権限を追加
+- 認証済みユーザーの権限を確認
 
 **問題**: CORSエラー
 **解決**: Supabase Dashboard → Settings → API → CORS設定を確認

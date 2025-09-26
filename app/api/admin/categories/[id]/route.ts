@@ -64,36 +64,83 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid category ID' }, { status: 400 })
     }
 
+    console.log('Updating category with ID:', categoryId, 'Body:', body)
+
+    // まず、カテゴリが存在するかチェック
+    const { data: existingCategory, error: fetchError } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('id', categoryId)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching category:', fetchError)
+      if (fetchError.code === 'PGRST116') {
+        return NextResponse.json({ error: 'カテゴリが見つかりません' }, { status: 404 })
+      }
+      return NextResponse.json({ error: fetchError.message }, { status: 500 })
+    }
+
+    console.log('Existing category found:', existingCategory)
+
     // カテゴリ名の重複チェック（自分以外）
-    if (body.name) {
-      const { data: existingCategory } = await supabase
+    if (body.name && body.name !== existingCategory.name) {
+      const { data: duplicateCategory } = await supabase
         .from('categories')
         .select('id')
         .eq('name', body.name)
         .neq('id', categoryId)
         .single()
 
-      if (existingCategory) {
+      if (duplicateCategory) {
         return NextResponse.json({ error: 'このカテゴリ名は既に登録されています' }, { status: 400 })
       }
     }
 
     // カテゴリを更新
-    const { data: category, error } = await supabase
+    const { data: categories, error, count } = await supabase
       .from('categories')
       .update(body)
       .eq('id', categoryId)
       .select()
-      .single()
 
     if (error) {
       console.error('Error updating category:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    console.log('Update result:', { categories, count, error })
+
+    // 更新後に必ずデータを再取得して確認
+    const { data: updatedCategory, error: fetchUpdatedError } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('id', categoryId)
+      .single()
+
+    if (fetchUpdatedError) {
+      console.error('Error fetching updated category:', fetchUpdatedError)
+      return NextResponse.json({ error: 'カテゴリの更新に失敗しました' }, { status: 500 })
+    }
+
+    console.log('Category updated successfully (fetched separately):', updatedCategory)
+    
+    // 更新前後のデータを比較
+    console.log('Before update:', existingCategory)
+    console.log('After update:', updatedCategory)
+    
+    // 実際に変更があったかチェック
+    const hasChanges = Object.keys(body).some(key => 
+      existingCategory[key] !== updatedCategory[key]
+    )
+    
+    if (!hasChanges) {
+      console.warn('No changes detected in the update')
+    }
+
     return NextResponse.json({ 
       message: 'カテゴリが正常に更新されました',
-      category 
+      category: updatedCategory 
     })
   } catch (error) {
     console.error('Unexpected error in PATCH /api/admin/categories/[id]:', error)

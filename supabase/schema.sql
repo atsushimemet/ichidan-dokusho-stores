@@ -150,6 +150,25 @@ FOR SELECT USING (true);
 CREATE POLICY "Enable read access for all users" ON areas
 FOR SELECT USING (true);
 
+-- 管理者用の更新・削除ポリシー
+CREATE POLICY "Enable update for authenticated users" ON areas
+FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for authenticated users" ON areas
+FOR DELETE USING (true);
+
+CREATE POLICY "Enable update for authenticated users" ON categories
+FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for authenticated users" ON categories
+FOR DELETE USING (true);
+
+CREATE POLICY "Enable insert for authenticated users" ON areas
+FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable insert for authenticated users" ON categories
+FOR INSERT WITH CHECK (true);
+
 -- =============================================
 -- 7. 初期データ投入
 -- =============================================
@@ -192,6 +211,14 @@ GRANT SELECT ON areas TO anon;
 GRANT SELECT ON stores TO authenticated;
 GRANT SELECT ON categories TO authenticated;
 GRANT SELECT ON areas TO authenticated;
+
+-- 認証済みユーザーに更新・削除権限を付与
+GRANT UPDATE ON areas TO authenticated;
+GRANT DELETE ON areas TO authenticated;
+GRANT INSERT ON areas TO authenticated;
+GRANT UPDATE ON categories TO authenticated;
+GRANT DELETE ON categories TO authenticated;
+GRANT INSERT ON categories TO authenticated;
 
 -- =============================================
 -- 9. コメント追加
