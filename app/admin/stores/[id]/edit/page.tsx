@@ -75,7 +75,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       const response = await fetch('/api/categories')
       if (response.ok) {
         const data = await response.json()
-        setCategories(data.categories || [])
+        setCategories(data.data.categories || [])
       }
     } catch (error) {
       console.error('Error fetching categories:', error)
@@ -87,7 +87,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       const response = await fetch('/api/areas')
       if (response.ok) {
         const data = await response.json()
-        setAreas(data.areas || [])
+        setAreas(data.data.areas || [])
       }
     } catch (error) {
       console.error('Error fetching areas:', error)
