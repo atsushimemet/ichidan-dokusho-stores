@@ -5,13 +5,13 @@ import { BookOpen, Heart, MapPin } from 'lucide-react'
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* ファーストビューコンテナ - モバイルビューポートに合わせて調整 */}
-      <div className="min-h-[calc(100vh-4rem)] flex flex-col">
+      {/* ファーストビューコンテナ - 検索コンポーネントが完全に表示されるよう調整 */}
+      <div className="min-h-[100vh] flex flex-col pt-4 sm:pt-6 md:pt-8">
         {/* ヒーローセクション - 上部に配置 */}
-        <section className="flex-1 flex items-center justify-center py-8 sm:py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <section className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto w-full">
             <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
                 次に行く本屋を探しませんか？
               </h1>
               <p className="text-sm sm:text-base md:text-xl text-gray-600 max-w-2xl mx-auto">
@@ -21,13 +21,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 検索セクション - ファーストビューの下部に固定配置 */}
-        <section className="pb-6 sm:pb-8 md:pb-12">
+        {/* 検索セクション - ファーストビューの下部に配置、十分な余白を確保 */}
+        <section className="flex-shrink-0 pb-8 sm:pb-10 md:pb-12">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Card>
+            <Card className="shadow-lg">
               <CardContent className="p-4 sm:p-6 md:p-8">
-                <div className="text-center mb-4 sm:mb-6">
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                <div className="text-center mb-3 sm:mb-4 md:mb-6">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                     書店を検索
                   </h2>
                   <p className="text-sm sm:text-base text-gray-600">
