@@ -76,6 +76,16 @@ function StoresPageContent() {
     return area?.name || '不明'
   }
 
+  const getPrefectureFromAreaIds = () => {
+    if (!area_ids || !areas.length) return ''
+    const areaIdArray = area_ids.split(',').map(id => parseInt(id.trim(), 10))
+    const selectedAreas = areas.filter(area => areaIdArray.includes(area.id))
+    if (selectedAreas.length > 0) {
+      return selectedAreas[0].prefecture
+    }
+    return ''
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -108,6 +118,7 @@ function StoresPageContent() {
             書店一覧
           </h1>
           <SearchForm 
+            initialPrefecture={getPrefectureFromAreaIds()}
             initialArea={area}
             initialCategory={category}
             initialSearch={search}

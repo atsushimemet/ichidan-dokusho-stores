@@ -28,6 +28,10 @@ export function SearchForm({
     fetchAreas()
   }, [])
 
+  useEffect(() => {
+    setPrefecture(initialPrefecture)
+  }, [initialPrefecture])
+
   const fetchAreas = async () => {
     try {
       const response = await fetch('/api/areas')
