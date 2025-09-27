@@ -5,17 +5,48 @@ import { BookOpen, Heart, MapPin } from 'lucide-react'
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* ファーストビューコンテナ - 下揃えレイアウト */}
-      <div className="h-[100vh] flex flex-col justify-end pb-4 sm:pb-6 md:pb-8">
-        {/* ヒーローセクション - 中央上部に配置 */}
-        <section className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-0">
+      {/* ファーストビューコンテナ - iPhone SE最適化 */}
+      <div className="h-[100vh] flex flex-col pb-4 sm:pb-6 md:pb-8">
+        {/* ヒーローセクション - 上部に詰めて配置 */}
+        <section className="pt-6 sm:pt-8 md:pt-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto w-full">
             <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">
                 次に行く本屋を探しませんか？
               </h1>
-              <p className="text-sm sm:text-base md:text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base md:text-xl text-gray-600 max-w-2xl mx-auto mb-4 sm:mb-6 md:mb-8">
                 独立系書店の魅力を発見し、あなただけの特別な本屋を見つけましょう。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 装飾セクション - 余白を美しく埋める */}
+        <section className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-0">
+          <div className="text-center space-y-6 sm:space-y-8">
+            {/* 本のアイコン装飾 */}
+            <div className="flex justify-center space-x-4 sm:space-x-6">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full flex items-center justify-center animate-pulse">
+                <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+              </div>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center animate-pulse" style={{animationDelay: '0.5s'}}>
+                <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
+              </div>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-pink-100 rounded-full flex items-center justify-center animate-pulse" style={{animationDelay: '1s'}}>
+                <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-pink-600" />
+              </div>
+            </div>
+            
+            {/* キャッチフレーズ */}
+            <div className="space-y-2 opacity-80">
+              <p className="text-xs sm:text-sm text-gray-500 font-medium">
+                📚 全国の独立系書店を発見
+              </p>
+              <p className="text-xs sm:text-sm text-gray-500 font-medium">
+                🗺️ エリア別で簡単検索
+              </p>
+              <p className="text-xs sm:text-sm text-gray-500 font-medium">
+                ❤️ あなただけの特別な本屋
               </p>
             </div>
           </div>
