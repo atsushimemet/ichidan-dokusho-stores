@@ -78,7 +78,7 @@ export function SearchForm({
   console.log('Available prefectures:', prefectures)
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-2.5">
       <div className="flex justify-center">
         <div className="w-full max-w-sm sm:max-w-md">
           <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700 mb-1">
@@ -100,7 +100,7 @@ export function SearchForm({
         </div>
       </div>
 
-      <div className="flex justify-center pt-1">
+      <div className="flex justify-center">
         <Button type="submit" className="flex items-center px-6 py-2.5 sm:px-4 sm:py-2 text-base sm:text-sm min-h-[44px] sm:min-h-[40px]">
           <Search className="w-4 h-4 mr-2" />
           検索

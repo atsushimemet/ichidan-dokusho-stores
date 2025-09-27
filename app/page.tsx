@@ -5,10 +5,10 @@ import { BookOpen, Heart, MapPin } from 'lucide-react'
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* ファーストビューコンテナ - 検索コンポーネントが完全に表示されるよう調整 */}
-      <div className="min-h-[100vh] flex flex-col pt-4 sm:pt-6 md:pt-8">
-        {/* ヒーローセクション - 上部に配置 */}
-        <section className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      {/* ファーストビューコンテナ - 下揃えレイアウト */}
+      <div className="h-[100vh] flex flex-col justify-end pb-4 sm:pb-6 md:pb-8">
+        {/* ヒーローセクション - 中央上部に配置 */}
+        <section className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-0">
           <div className="max-w-7xl mx-auto w-full">
             <div className="text-center">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
@@ -21,13 +21,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 検索セクション - ファーストビューの下部に配置、十分な余白を確保 */}
-        <section className="flex-shrink-0 pb-8 sm:pb-10 md:pb-12">
+        {/* 検索セクション - ファーストビューの下部に下揃えで配置 */}
+        <section className="flex-shrink-0">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <Card className="shadow-lg">
-              <CardContent className="p-4 sm:p-6 md:p-8">
-                <div className="text-center mb-3 sm:mb-4 md:mb-6">
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+              <CardContent className="p-3 sm:p-4 md:p-6">
+                <div className="text-center mb-3 sm:mb-4">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1">
                     書店を検索
                   </h2>
                   <p className="text-sm sm:text-base text-gray-600">
