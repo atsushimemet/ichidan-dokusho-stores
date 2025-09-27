@@ -3,6 +3,19 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
+    // テスト用：モック管理者を返す
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+      console.log('Using mock admin data')
+      return NextResponse.json({ 
+        admin: {
+          id: 'admin-1',
+          name: 'テスト管理者',
+          role: 'admin'
+        }
+      })
+    }
+
     const admin = await getCurrentAdmin()
 
     if (!admin) {

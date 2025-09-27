@@ -3,8 +3,30 @@ import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
+// テスト用のモックデータ
+const mockCategoryTags = [
+  { id: 1, name: 'coffee', display_name: 'コーヒー', is_active: true, created_at: new Date().toISOString() },
+  { id: 2, name: 'wine', display_name: 'ワイン', is_active: true, created_at: new Date().toISOString() },
+  { id: 3, name: 'art', display_name: 'アート', is_active: true, created_at: new Date().toISOString() },
+  { id: 4, name: 'music', display_name: '音楽', is_active: true, created_at: new Date().toISOString() },
+  { id: 5, name: 'vintage', display_name: 'ヴィンテージ', is_active: true, created_at: new Date().toISOString() },
+  { id: 6, name: 'kids', display_name: 'キッズ', is_active: true, created_at: new Date().toISOString() },
+  { id: 7, name: 'manga', display_name: '漫画', is_active: true, created_at: new Date().toISOString() },
+  { id: 8, name: 'foreign', display_name: '洋書', is_active: true, created_at: new Date().toISOString() }
+]
+
 export async function GET() {
   try {
+    // テスト用：モックデータを返す
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+      console.log('Using mock category tags data')
+      return NextResponse.json({
+        success: true,
+        data: { category_tags: mockCategoryTags }
+      })
+    }
+
     const { data: categoryTags, error } = await supabase
       .from('category_tags')
       .select('*')
