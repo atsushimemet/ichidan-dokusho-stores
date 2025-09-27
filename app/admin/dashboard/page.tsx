@@ -42,7 +42,7 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     try {
       const [storesRes, categoryTagsRes, areasRes] = await Promise.all([
-        fetch('/api/stores?limit=1'),
+        fetch('/api/admin/stores'),
         fetch('/api/category-tags'),
         fetch('/api/areas')
       ])
