@@ -5,38 +5,41 @@ import { BookOpen, Heart, MapPin } from 'lucide-react'
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* ヒーローセクション - モバイル最適化 */}
-      <section className="py-4 sm:py-8 md:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
-              次に行く本屋を探しませんか？
-            </h1>
-            <p className="text-sm sm:text-base md:text-xl text-gray-600 mb-4 sm:mb-6 md:mb-8 max-w-2xl mx-auto">
-              独立系書店の魅力を発見し、あなただけの特別な本屋を見つけましょう。
-            </p>
+      {/* ファーストビューコンテナ - モバイルビューポートに合わせて調整 */}
+      <div className="min-h-[calc(100vh-4rem)] flex flex-col">
+        {/* ヒーローセクション - 上部に配置 */}
+        <section className="flex-1 flex items-center justify-center py-8 sm:py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="text-center">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">
+                次に行く本屋を探しませんか？
+              </h1>
+              <p className="text-sm sm:text-base md:text-xl text-gray-600 max-w-2xl mx-auto">
+                独立系書店の魅力を発見し、あなただけの特別な本屋を見つけましょう。
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 検索セクション - モバイルファーストビュー最適化 */}
-      <section className="py-2 sm:py-4 md:py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card>
-            <CardContent className="p-3 sm:p-4 md:p-6 lg:p-8">
-              <div className="text-center mb-4 sm:mb-6 md:mb-8">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  書店を検索
-                </h2>
-                <p className="text-sm sm:text-base text-gray-600">
-                  エリアやカテゴリから、お気に入りの書店を見つけましょう
-                </p>
-              </div>
-              <SearchForm />
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+        {/* 検索セクション - ファーストビューの下部に固定配置 */}
+        <section className="pb-6 sm:pb-8 md:pb-12">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Card>
+              <CardContent className="p-4 sm:p-6 md:p-8">
+                <div className="text-center mb-4 sm:mb-6">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                    書店を検索
+                  </h2>
+                  <p className="text-sm sm:text-base text-gray-600">
+                    エリアやカテゴリから、お気に入りの書店を見つけましょう
+                  </p>
+                </div>
+                <SearchForm />
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      </div>
 
       {/* 特徴セクション */}
       <section className="py-16 bg-white">
