@@ -3,6 +3,35 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
+// テスト用のモックデータ
+const mockStores = [
+  {
+    id: '1',
+    name: 'テスト書店',
+    area_id: 1,
+    x_link: 'https://x.com/test',
+    instagram_link: 'https://instagram.com/test',
+    website_link: 'https://test.com',
+    x_post_url: 'https://x.com/test/status/123',
+    google_map_link: 'https://maps.google.com/?q=test',
+    description: 'テスト用の書店です',
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    category_tags: [
+      {
+        category_tag: {
+          id: 1,
+          name: 'coffee',
+          display_name: 'コーヒー',
+          is_active: true,
+          created_at: new Date().toISOString()
+        }
+      }
+    ]
+  }
+]
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -12,6 +41,24 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
+
+    // テスト用：モックデータを返す
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+      console.log('Using mock stores data')
+      return NextResponse.json({
+        success: true,
+        data: {
+          stores: mockStores,
+          pagination: {
+            page,
+            limit,
+            total: mockStores.length,
+            totalPages: 1
+          }
+        }
+      })
+    }
 
     // クエリ構築
     let query = supabase

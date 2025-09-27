@@ -101,6 +101,8 @@ export default function EditStorePage({ params }: EditStorePageProps) {
     setSaving(true)
 
     try {
+      console.log('Submitting form data:', formData)
+      
       const response = await fetch(`/api/admin/stores/${params.id}`, {
         method: 'PATCH',
         headers: {
@@ -112,12 +114,17 @@ export default function EditStorePage({ params }: EditStorePageProps) {
         })
       })
 
+      console.log('Response status:', response.status)
+      
       if (response.ok) {
+        const result = await response.json()
+        console.log('Update successful:', result)
         alert('書店を更新しました')
         router.push('/admin/dashboard')
       } else {
         const error = await response.json()
         console.error('Store update error:', error)
+        console.error('Response status:', response.status)
         if (error.error && typeof error.error === 'object') {
           alert(`更新に失敗しました: ${error.error.message || '不明なエラー'}`)
         } else {
@@ -126,7 +133,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       }
     } catch (error) {
       console.error('Error updating store:', error)
-      alert('更新に失敗しました')
+      alert('更新に失敗しました: ネットワークエラーまたは予期しないエラーが発生しました')
     } finally {
       setSaving(false)
     }
@@ -369,8 +376,22 @@ export default function EditStorePage({ params }: EditStorePageProps) {
                 disabled={saving}
                 className="bg-blue-600 hover:bg-blue-700 px-3"
                 title={saving ? '更新中...' : '更新'}
+                onClick={(e) => {
+                  console.log('Update button clicked')
+                  // フォームの送信はonSubmitイベントで処理される
+                }}
               >
-                <Save className="h-4 w-4" />
+                {saving ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    更新中...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    更新
+                  </>
+                )}
               </Button>
             </div>
           </form>
