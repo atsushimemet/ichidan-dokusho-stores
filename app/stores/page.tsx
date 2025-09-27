@@ -5,10 +5,11 @@ import { useSearchParams } from 'next/navigation'
 import { SearchForm } from '@/components/store/search-form'
 import { StoreCard } from '@/components/store/store-card'
 import { Button } from '@/components/ui'
-import { Store } from '@/lib/types'
+import { Store, Area } from '@/lib/types'
 
 function StoresPageContent() {
   const [stores, setStores] = useState<Store[]>([])
+  const [areas, setAreas] = useState<Area[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pagination, setPagination] = useState({
@@ -26,6 +27,7 @@ function StoresPageContent() {
 
   useEffect(() => {
     fetchStores()
+    fetchAreas()
   }, [area, area_ids, category, search])
 
   const fetchStores = async () => {
@@ -55,6 +57,23 @@ function StoresPageContent() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const fetchAreas = async () => {
+    try {
+      const response = await fetch('/api/areas')
+      const data = await response.json()
+      if (data.success) {
+        setAreas(data.data.areas || [])
+      }
+    } catch (error) {
+      console.error('Error fetching areas:', error)
+    }
+  }
+
+  const getAreaName = (areaId: number) => {
+    const area = areas.find(a => a.id === areaId)
+    return area?.name || '不明'
   }
 
   if (loading) {
@@ -114,7 +133,11 @@ function StoresPageContent() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {stores.map((store) => (
-                <StoreCard key={store.id} store={store} />
+                <StoreCard 
+                  key={store.id} 
+                  store={store} 
+                  areaName={getAreaName(store.area_id)}
+                />
               ))}
             </div>
 

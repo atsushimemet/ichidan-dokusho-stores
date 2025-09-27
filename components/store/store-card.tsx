@@ -5,9 +5,10 @@ import { Store } from '@/lib/types'
 
 interface StoreCardProps {
   store: Store
+  areaName?: string
 }
 
-export function StoreCard({ store }: StoreCardProps) {
+export function StoreCard({ store, areaName }: StoreCardProps) {
   return (
     <Link href={`/stores/${store.id}`}>
       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
@@ -27,12 +28,12 @@ export function StoreCard({ store }: StoreCardProps) {
                 title="Google Mapで開く"
               >
                 <MapPin className="w-4 h-4 mr-1" />
-                エリアID: {store.area_id}
+                {areaName || `エリアID: ${store.area_id}`}
               </a>
             ) : (
               <>
                 <MapPin className="w-4 h-4 mr-1" />
-                エリアID: {store.area_id}
+                {areaName || `エリアID: ${store.area_id}`}
               </>
             )}
           </div>
